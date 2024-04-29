@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DriverResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.web.rest</a> &gt; <span class="el_source">DriverResource.java</span></div><h1>DriverResource.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.web.rest;
+
+import com.mycompany.myapp.domain.Driver;
+import com.mycompany.myapp.repository.DriverRepository;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+/**
+ * REST controller for managing {@link com.mycompany.myapp.domain.Driver}.
+ */
+@RestController
+@RequestMapping(&quot;/api/drivers&quot;)
+@Transactional
+public class DriverResource {
+
+<span class="fc" id="L28">    private final Logger log = LoggerFactory.getLogger(DriverResource.class);</span>
+
+    private static final String ENTITY_NAME = &quot;driver&quot;;
+
+    @Value(&quot;${jhipster.clientApp.name}&quot;)
+    private String applicationName;
+
+    private final DriverRepository driverRepository;
+
+<span class="fc" id="L37">    public DriverResource(DriverRepository driverRepository) {</span>
+<span class="fc" id="L38">        this.driverRepository = driverRepository;</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * {@code POST  /drivers} : Create a new driver.
+     *
+     * @param driver the driver to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new driver, or with status {@code 400 (Bad Request)} if the driver has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping(&quot;&quot;)
+    public ResponseEntity&lt;Driver&gt; createDriver(@RequestBody Driver driver) throws URISyntaxException {
+<span class="fc" id="L50">        log.debug(&quot;REST request to save Driver : {}&quot;, driver);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (driver.getId() != null) {</span>
+<span class="fc" id="L52">            throw new BadRequestAlertException(&quot;A new driver cannot already have an ID&quot;, ENTITY_NAME, &quot;idexists&quot;);</span>
+        }
+<span class="fc" id="L54">        driver = driverRepository.save(driver);</span>
+<span class="fc" id="L55">        return ResponseEntity.created(new URI(&quot;/api/drivers/&quot; + driver.getId()))</span>
+<span class="fc" id="L56">            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, driver.getId().toString()))</span>
+<span class="fc" id="L57">            .body(driver);</span>
+    }
+
+    /**
+     * {@code PUT  /drivers/:id} : Updates an existing driver.
+     *
+     * @param id the id of the driver to save.
+     * @param driver the driver to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated driver,
+     * or with status {@code 400 (Bad Request)} if the driver is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the driver couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Driver&gt; updateDriver(@PathVariable(value = &quot;id&quot;, required = false) final Long id, @RequestBody Driver driver)
+        throws URISyntaxException {
+<span class="fc" id="L73">        log.debug(&quot;REST request to update Driver : {}, {}&quot;, id, driver);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (driver.getId() == null) {</span>
+<span class="nc" id="L75">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (!Objects.equals(id, driver.getId())) {</span>
+<span class="fc" id="L78">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (!driverRepository.existsById(id)) {</span>
+<span class="fc" id="L82">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="fc" id="L85">        driver = driverRepository.save(driver);</span>
+<span class="fc" id="L86">        return ResponseEntity.ok()</span>
+<span class="fc" id="L87">            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, driver.getId().toString()))</span>
+<span class="fc" id="L88">            .body(driver);</span>
+    }
+
+    /**
+     * {@code PATCH  /drivers/:id} : Partial updates given fields of an existing driver, field will ignore if it is null
+     *
+     * @param id the id of the driver to save.
+     * @param driver the driver to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated driver,
+     * or with status {@code 400 (Bad Request)} if the driver is not valid,
+     * or with status {@code 404 (Not Found)} if the driver is not found,
+     * or with status {@code 500 (Internal Server Error)} if the driver couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = &quot;/{id}&quot;, consumes = { &quot;application/json&quot;, &quot;application/merge-patch+json&quot; })
+    public ResponseEntity&lt;Driver&gt; partialUpdateDriver(
+        @PathVariable(value = &quot;id&quot;, required = false) final Long id,
+        @RequestBody Driver driver
+    ) throws URISyntaxException {
+<span class="fc" id="L107">        log.debug(&quot;REST request to partial update Driver partially : {}, {}&quot;, id, driver);</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (driver.getId() == null) {</span>
+<span class="nc" id="L109">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (!Objects.equals(id, driver.getId())) {</span>
+<span class="fc" id="L112">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if (!driverRepository.existsById(id)) {</span>
+<span class="fc" id="L116">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="fc" id="L119">        Optional&lt;Driver&gt; result = driverRepository</span>
+<span class="fc" id="L120">            .findById(driver.getId())</span>
+<span class="fc" id="L121">            .map(existingDriver -&gt; {</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">                if (driver.getDriverID() != null) {</span>
+<span class="fc" id="L123">                    existingDriver.setDriverID(driver.getDriverID());</span>
+                }
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                if (driver.getFname() != null) {</span>
+<span class="fc" id="L126">                    existingDriver.setFname(driver.getFname());</span>
+                }
+<span class="fc bfc" id="L128" title="All 2 branches covered.">                if (driver.getLname() != null) {</span>
+<span class="fc" id="L129">                    existingDriver.setLname(driver.getLname());</span>
+                }
+<span class="fc bfc" id="L131" title="All 2 branches covered.">                if (driver.getDob() != null) {</span>
+<span class="fc" id="L132">                    existingDriver.setDob(driver.getDob());</span>
+                }
+
+<span class="fc" id="L135">                return existingDriver;</span>
+            })
+<span class="fc" id="L137">            .map(driverRepository::save);</span>
+
+<span class="fc" id="L139">        return ResponseUtil.wrapOrNotFound(</span>
+            result,
+<span class="fc" id="L141">            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, driver.getId().toString())</span>
+        );
+    }
+
+    /**
+     * {@code GET  /drivers} : get all the drivers.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of drivers in body.
+     */
+    @GetMapping(&quot;&quot;)
+    public List&lt;Driver&gt; getAllDrivers() {
+<span class="fc" id="L152">        log.debug(&quot;REST request to get all Drivers&quot;);</span>
+<span class="fc" id="L153">        return driverRepository.findAll();</span>
+    }
+
+    /**
+     * {@code GET  /drivers/:id} : get the &quot;id&quot; driver.
+     *
+     * @param id the id of the driver to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the driver, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Driver&gt; getDriver(@PathVariable(&quot;id&quot;) Long id) {
+<span class="fc" id="L164">        log.debug(&quot;REST request to get Driver : {}&quot;, id);</span>
+<span class="fc" id="L165">        Optional&lt;Driver&gt; driver = driverRepository.findById(id);</span>
+<span class="fc" id="L166">        return ResponseUtil.wrapOrNotFound(driver);</span>
+    }
+
+    /**
+     * {@code DELETE  /drivers/:id} : delete the &quot;id&quot; driver.
+     *
+     * @param id the id of the driver to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteDriver(@PathVariable(&quot;id&quot;) Long id) {
+<span class="fc" id="L177">        log.debug(&quot;REST request to delete Driver : {}&quot;, id);</span>
+<span class="fc" id="L178">        driverRepository.deleteById(id);</span>
+<span class="fc" id="L179">        return ResponseEntity.noContent()</span>
+<span class="fc" id="L180">            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))</span>
+<span class="fc" id="L181">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

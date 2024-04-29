@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpaWebFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.web.filter</a> &gt; <span class="el_source">SpaWebFilter.java</span></div><h1>SpaWebFilter.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.web.filter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+<span class="fc" id="L10">public class SpaWebFilter extends OncePerRequestFilter {</span>
+
+    /**
+     * Forwards any unmapped paths (except those containing a period) to the client {@code index.html}.
+     */
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+        throws ServletException, IOException {
+        // Request URI includes the contextPath if any, removed it.
+<span class="fc" id="L19">        String path = request.getRequestURI().substring(request.getContextPath().length());</span>
+<span class="fc" id="L20">        if (</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            !path.startsWith(&quot;/api&quot;) &amp;&amp;</span>
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">            !path.startsWith(&quot;/management&quot;) &amp;&amp;</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">            !path.startsWith(&quot;/v3/api-docs&quot;) &amp;&amp;</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">            !path.startsWith(&quot;/h2-console&quot;) &amp;&amp;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">            !path.contains(&quot;.&quot;) &amp;&amp;</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">            path.matches(&quot;/(.*)&quot;)</span>
+        ) {
+<span class="fc" id="L28">            request.getRequestDispatcher(&quot;/index.html&quot;).forward(request, response);</span>
+<span class="fc" id="L29">            return;</span>
+        }
+
+<span class="fc" id="L32">        filterChain.doFilter(request, response);</span>
+<span class="fc" id="L33">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

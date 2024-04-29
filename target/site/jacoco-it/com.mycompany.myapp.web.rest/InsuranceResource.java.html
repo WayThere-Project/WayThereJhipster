@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InsuranceResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.web.rest</a> &gt; <span class="el_source">InsuranceResource.java</span></div><h1>InsuranceResource.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.web.rest;
+
+import com.mycompany.myapp.domain.Insurance;
+import com.mycompany.myapp.repository.InsuranceRepository;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+/**
+ * REST controller for managing {@link com.mycompany.myapp.domain.Insurance}.
+ */
+@RestController
+@RequestMapping(&quot;/api/insurances&quot;)
+@Transactional
+public class InsuranceResource {
+
+<span class="fc" id="L29">    private final Logger log = LoggerFactory.getLogger(InsuranceResource.class);</span>
+
+    private static final String ENTITY_NAME = &quot;insurance&quot;;
+
+    @Value(&quot;${jhipster.clientApp.name}&quot;)
+    private String applicationName;
+
+    private final InsuranceRepository insuranceRepository;
+
+<span class="fc" id="L38">    public InsuranceResource(InsuranceRepository insuranceRepository) {</span>
+<span class="fc" id="L39">        this.insuranceRepository = insuranceRepository;</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * {@code POST  /insurances} : Create a new insurance.
+     *
+     * @param insurance the insurance to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new insurance, or with status {@code 400 (Bad Request)} if the insurance has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping(&quot;&quot;)
+    public ResponseEntity&lt;Insurance&gt; createInsurance(@RequestBody Insurance insurance) throws URISyntaxException {
+<span class="fc" id="L51">        log.debug(&quot;REST request to save Insurance : {}&quot;, insurance);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (insurance.getId() != null) {</span>
+<span class="fc" id="L53">            throw new BadRequestAlertException(&quot;A new insurance cannot already have an ID&quot;, ENTITY_NAME, &quot;idexists&quot;);</span>
+        }
+<span class="fc" id="L55">        insurance = insuranceRepository.save(insurance);</span>
+<span class="fc" id="L56">        return ResponseEntity.created(new URI(&quot;/api/insurances/&quot; + insurance.getId()))</span>
+<span class="fc" id="L57">            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, insurance.getId().toString()))</span>
+<span class="fc" id="L58">            .body(insurance);</span>
+    }
+
+    /**
+     * {@code PUT  /insurances/:id} : Updates an existing insurance.
+     *
+     * @param id the id of the insurance to save.
+     * @param insurance the insurance to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated insurance,
+     * or with status {@code 400 (Bad Request)} if the insurance is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the insurance couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Insurance&gt; updateInsurance(
+        @PathVariable(value = &quot;id&quot;, required = false) final Long id,
+        @RequestBody Insurance insurance
+    ) throws URISyntaxException {
+<span class="fc" id="L76">        log.debug(&quot;REST request to update Insurance : {}, {}&quot;, id, insurance);</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (insurance.getId() == null) {</span>
+<span class="nc" id="L78">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (!Objects.equals(id, insurance.getId())) {</span>
+<span class="fc" id="L81">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (!insuranceRepository.existsById(id)) {</span>
+<span class="fc" id="L85">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="fc" id="L88">        insurance = insuranceRepository.save(insurance);</span>
+<span class="fc" id="L89">        return ResponseEntity.ok()</span>
+<span class="fc" id="L90">            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, insurance.getId().toString()))</span>
+<span class="fc" id="L91">            .body(insurance);</span>
+    }
+
+    /**
+     * {@code PATCH  /insurances/:id} : Partial updates given fields of an existing insurance, field will ignore if it is null
+     *
+     * @param id the id of the insurance to save.
+     * @param insurance the insurance to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated insurance,
+     * or with status {@code 400 (Bad Request)} if the insurance is not valid,
+     * or with status {@code 404 (Not Found)} if the insurance is not found,
+     * or with status {@code 500 (Internal Server Error)} if the insurance couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = &quot;/{id}&quot;, consumes = { &quot;application/json&quot;, &quot;application/merge-patch+json&quot; })
+    public ResponseEntity&lt;Insurance&gt; partialUpdateInsurance(
+        @PathVariable(value = &quot;id&quot;, required = false) final Long id,
+        @RequestBody Insurance insurance
+    ) throws URISyntaxException {
+<span class="fc" id="L110">        log.debug(&quot;REST request to partial update Insurance partially : {}, {}&quot;, id, insurance);</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (insurance.getId() == null) {</span>
+<span class="nc" id="L112">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (!Objects.equals(id, insurance.getId())) {</span>
+<span class="fc" id="L115">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (!insuranceRepository.existsById(id)) {</span>
+<span class="fc" id="L119">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="fc" id="L122">        Optional&lt;Insurance&gt; result = insuranceRepository</span>
+<span class="fc" id="L123">            .findById(insurance.getId())</span>
+<span class="fc" id="L124">            .map(existingInsurance -&gt; {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">                if (insurance.getInsID() != null) {</span>
+<span class="fc" id="L126">                    existingInsurance.setInsID(insurance.getInsID());</span>
+                }
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">                if (insurance.getInsDescription() != null) {</span>
+<span class="fc" id="L129">                    existingInsurance.setInsDescription(insurance.getInsDescription());</span>
+                }
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">                if (insurance.getStartDate() != null) {</span>
+<span class="fc" id="L132">                    existingInsurance.setStartDate(insurance.getStartDate());</span>
+                }
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">                if (insurance.getExpirationDate() != null) {</span>
+<span class="fc" id="L135">                    existingInsurance.setExpirationDate(insurance.getExpirationDate());</span>
+                }
+
+<span class="fc" id="L138">                return existingInsurance;</span>
+            })
+<span class="fc" id="L140">            .map(insuranceRepository::save);</span>
+
+<span class="fc" id="L142">        return ResponseUtil.wrapOrNotFound(</span>
+            result,
+<span class="fc" id="L144">            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, insurance.getId().toString())</span>
+        );
+    }
+
+    /**
+     * {@code GET  /insurances} : get all the insurances.
+     *
+     * @param filter the filter of the request.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of insurances in body.
+     */
+    @GetMapping(&quot;&quot;)
+    public List&lt;Insurance&gt; getAllInsurances(@RequestParam(name = &quot;filter&quot;, required = false) String filter) {
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (&quot;reservation-is-null&quot;.equals(filter)) {</span>
+<span class="nc" id="L157">            log.debug(&quot;REST request to get all Insurances where reservation is null&quot;);</span>
+<span class="nc" id="L158">            return StreamSupport.stream(insuranceRepository.findAll().spliterator(), false)</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                .filter(insurance -&gt; insurance.getReservation() == null)</span>
+<span class="nc" id="L160">                .toList();</span>
+        }
+<span class="fc" id="L162">        log.debug(&quot;REST request to get all Insurances&quot;);</span>
+<span class="fc" id="L163">        return insuranceRepository.findAll();</span>
+    }
+
+    /**
+     * {@code GET  /insurances/:id} : get the &quot;id&quot; insurance.
+     *
+     * @param id the id of the insurance to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the insurance, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Insurance&gt; getInsurance(@PathVariable(&quot;id&quot;) Long id) {
+<span class="fc" id="L174">        log.debug(&quot;REST request to get Insurance : {}&quot;, id);</span>
+<span class="fc" id="L175">        Optional&lt;Insurance&gt; insurance = insuranceRepository.findById(id);</span>
+<span class="fc" id="L176">        return ResponseUtil.wrapOrNotFound(insurance);</span>
+    }
+
+    /**
+     * {@code DELETE  /insurances/:id} : delete the &quot;id&quot; insurance.
+     *
+     * @param id the id of the insurance to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteInsurance(@PathVariable(&quot;id&quot;) Long id) {
+<span class="fc" id="L187">        log.debug(&quot;REST request to delete Insurance : {}&quot;, id);</span>
+<span class="fc" id="L188">        insuranceRepository.deleteById(id);</span>
+<span class="fc" id="L189">        return ResponseEntity.noContent()</span>
+<span class="fc" id="L190">            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))</span>
+<span class="fc" id="L191">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

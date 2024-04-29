@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.web.rest</a> &gt; <span class="el_source">VehicleResource.java</span></div><h1>VehicleResource.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.web.rest;
+
+import com.mycompany.myapp.domain.Vehicle;
+import com.mycompany.myapp.repository.VehicleRepository;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+/**
+ * REST controller for managing {@link com.mycompany.myapp.domain.Vehicle}.
+ */
+@RestController
+@RequestMapping(&quot;/api/vehicles&quot;)
+@Transactional
+public class VehicleResource {
+
+<span class="nc" id="L29">    private final Logger log = LoggerFactory.getLogger(VehicleResource.class);</span>
+
+    private static final String ENTITY_NAME = &quot;vehicle&quot;;
+
+    @Value(&quot;${jhipster.clientApp.name}&quot;)
+    private String applicationName;
+
+    private final VehicleRepository vehicleRepository;
+
+<span class="nc" id="L38">    public VehicleResource(VehicleRepository vehicleRepository) {</span>
+<span class="nc" id="L39">        this.vehicleRepository = vehicleRepository;</span>
+<span class="nc" id="L40">    }</span>
+
+    /**
+     * {@code POST  /vehicles} : Create a new vehicle.
+     *
+     * @param vehicle the vehicle to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new vehicle, or with status {@code 400 (Bad Request)} if the vehicle has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping(&quot;&quot;)
+    public ResponseEntity&lt;Vehicle&gt; createVehicle(@RequestBody Vehicle vehicle) throws URISyntaxException {
+<span class="nc" id="L51">        log.debug(&quot;REST request to save Vehicle : {}&quot;, vehicle);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (vehicle.getId() != null) {</span>
+<span class="nc" id="L53">            throw new BadRequestAlertException(&quot;A new vehicle cannot already have an ID&quot;, ENTITY_NAME, &quot;idexists&quot;);</span>
+        }
+<span class="nc" id="L55">        vehicle = vehicleRepository.save(vehicle);</span>
+<span class="nc" id="L56">        return ResponseEntity.created(new URI(&quot;/api/vehicles/&quot; + vehicle.getId()))</span>
+<span class="nc" id="L57">            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, vehicle.getId().toString()))</span>
+<span class="nc" id="L58">            .body(vehicle);</span>
+    }
+
+    /**
+     * {@code PUT  /vehicles/:id} : Updates an existing vehicle.
+     *
+     * @param id the id of the vehicle to save.
+     * @param vehicle the vehicle to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vehicle,
+     * or with status {@code 400 (Bad Request)} if the vehicle is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the vehicle couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Vehicle&gt; updateVehicle(@PathVariable(value = &quot;id&quot;, required = false) final Long id, @RequestBody Vehicle vehicle)
+        throws URISyntaxException {
+<span class="nc" id="L74">        log.debug(&quot;REST request to update Vehicle : {}, {}&quot;, id, vehicle);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (vehicle.getId() == null) {</span>
+<span class="nc" id="L76">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (!Objects.equals(id, vehicle.getId())) {</span>
+<span class="nc" id="L79">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (!vehicleRepository.existsById(id)) {</span>
+<span class="nc" id="L83">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="nc" id="L86">        vehicle = vehicleRepository.save(vehicle);</span>
+<span class="nc" id="L87">        return ResponseEntity.ok()</span>
+<span class="nc" id="L88">            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, vehicle.getId().toString()))</span>
+<span class="nc" id="L89">            .body(vehicle);</span>
+    }
+
+    /**
+     * {@code PATCH  /vehicles/:id} : Partial updates given fields of an existing vehicle, field will ignore if it is null
+     *
+     * @param id the id of the vehicle to save.
+     * @param vehicle the vehicle to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated vehicle,
+     * or with status {@code 400 (Bad Request)} if the vehicle is not valid,
+     * or with status {@code 404 (Not Found)} if the vehicle is not found,
+     * or with status {@code 500 (Internal Server Error)} if the vehicle couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = &quot;/{id}&quot;, consumes = { &quot;application/json&quot;, &quot;application/merge-patch+json&quot; })
+    public ResponseEntity&lt;Vehicle&gt; partialUpdateVehicle(
+        @PathVariable(value = &quot;id&quot;, required = false) final Long id,
+        @RequestBody Vehicle vehicle
+    ) throws URISyntaxException {
+<span class="nc" id="L108">        log.debug(&quot;REST request to partial update Vehicle partially : {}, {}&quot;, id, vehicle);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (vehicle.getId() == null) {</span>
+<span class="nc" id="L110">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (!Objects.equals(id, vehicle.getId())) {</span>
+<span class="nc" id="L113">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (!vehicleRepository.existsById(id)) {</span>
+<span class="nc" id="L117">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="nc" id="L120">        Optional&lt;Vehicle&gt; result = vehicleRepository</span>
+<span class="nc" id="L121">            .findById(vehicle.getId())</span>
+<span class="nc" id="L122">            .map(existingVehicle -&gt; {</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                if (vehicle.getVehicleID() != null) {</span>
+<span class="nc" id="L124">                    existingVehicle.setVehicleID(vehicle.getVehicleID());</span>
+                }
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                if (vehicle.getVehicleSize() != null) {</span>
+<span class="nc" id="L127">                    existingVehicle.setVehicleSize(vehicle.getVehicleSize());</span>
+                }
+<span class="nc bnc" id="L129" title="All 2 branches missed.">                if (vehicle.getMake() != null) {</span>
+<span class="nc" id="L130">                    existingVehicle.setMake(vehicle.getMake());</span>
+                }
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                if (vehicle.getLastServicingDate() != null) {</span>
+<span class="nc" id="L133">                    existingVehicle.setLastServicingDate(vehicle.getLastServicingDate());</span>
+                }
+<span class="nc bnc" id="L135" title="All 2 branches missed.">                if (vehicle.getModel() != null) {</span>
+<span class="nc" id="L136">                    existingVehicle.setModel(vehicle.getModel());</span>
+                }
+
+<span class="nc" id="L139">                return existingVehicle;</span>
+            })
+<span class="nc" id="L141">            .map(vehicleRepository::save);</span>
+
+<span class="nc" id="L143">        return ResponseUtil.wrapOrNotFound(</span>
+            result,
+<span class="nc" id="L145">            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, vehicle.getId().toString())</span>
+        );
+    }
+
+    /**
+     * {@code GET  /vehicles} : get all the vehicles.
+     *
+     * @param filter the filter of the request.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of vehicles in body.
+     */
+    @GetMapping(&quot;&quot;)
+    public List&lt;Vehicle&gt; getAllVehicles(@RequestParam(name = &quot;filter&quot;, required = false) String filter) {
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (&quot;driver-is-null&quot;.equals(filter)) {</span>
+<span class="nc" id="L158">            log.debug(&quot;REST request to get all Vehicles where driver is null&quot;);</span>
+<span class="nc" id="L159">            return StreamSupport.stream(vehicleRepository.findAll().spliterator(), false)</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">                .filter(vehicle -&gt; vehicle.getDriver() == null)</span>
+<span class="nc" id="L161">                .toList();</span>
+        }
+<span class="nc" id="L163">        log.debug(&quot;REST request to get all Vehicles&quot;);</span>
+<span class="nc" id="L164">        return vehicleRepository.findAll();</span>
+    }
+
+    /**
+     * {@code GET  /vehicles/:id} : get the &quot;id&quot; vehicle.
+     *
+     * @param id the id of the vehicle to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the vehicle, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Vehicle&gt; getVehicle(@PathVariable(&quot;id&quot;) Long id) {
+<span class="nc" id="L175">        log.debug(&quot;REST request to get Vehicle : {}&quot;, id);</span>
+<span class="nc" id="L176">        Optional&lt;Vehicle&gt; vehicle = vehicleRepository.findById(id);</span>
+<span class="nc" id="L177">        return ResponseUtil.wrapOrNotFound(vehicle);</span>
+    }
+
+    /**
+     * {@code DELETE  /vehicles/:id} : delete the &quot;id&quot; vehicle.
+     *
+     * @param id the id of the vehicle to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteVehicle(@PathVariable(&quot;id&quot;) Long id) {
+<span class="nc" id="L188">        log.debug(&quot;REST request to delete Vehicle : {}&quot;, id);</span>
+<span class="nc" id="L189">        vehicleRepository.deleteById(id);</span>
+<span class="nc" id="L190">        return ResponseEntity.noContent()</span>
+<span class="nc" id="L191">            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))</span>
+<span class="nc" id="L192">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

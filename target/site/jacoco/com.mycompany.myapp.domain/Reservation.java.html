@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reservation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.domain</a> &gt; <span class="el_source">Reservation.java</span></div><h1>Reservation.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+/**
+ * A Reservation.
+ */
+@Entity
+@Table(name = &quot;reservation&quot;)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@SuppressWarnings(&quot;common-java:DuplicatedBlocks&quot;)
+<span class="fc" id="L17">public class Reservation implements Serializable {</span>
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+    private Long id;
+
+    @Column(name = &quot;reservation_id&quot;)
+    private Long reservationID;
+
+    @Column(name = &quot;requested_time&quot;)
+    private Float requestedTime;
+
+    @Column(name = &quot;date&quot;)
+    private LocalDate date;
+
+    @Column(name = &quot;start_time&quot;)
+    private Float startTime;
+
+    @Column(name = &quot;end_time&quot;)
+    private Float endTime;
+
+    @Column(name = &quot;wait_time&quot;)
+    private Float waitTime;
+
+    @Column(name = &quot;driver_rating&quot;)
+    private Float driverRating;
+
+    @Column(name = &quot;customer_rating&quot;)
+    private Float customerRating;
+
+    @Column(name = &quot;comment&quot;)
+    private String comment;
+
+    @Column(name = &quot;trip_cost&quot;)
+    private Float tripCost;
+
+    @JsonIgnoreProperties(value = { &quot;reservation&quot; }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Insurance insurance;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Location pickupLocation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Location dropoffLocation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { &quot;payments&quot;, &quot;reservations&quot; }, allowSetters = true)
+    private Customer customer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { &quot;vehicle&quot;, &quot;reservations&quot; }, allowSetters = true)
+    private Driver driver;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { &quot;reservations&quot;, &quot;driver&quot; }, allowSetters = true)
+    private Vehicle vehicle;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { &quot;reservations&quot; }, allowSetters = true)
+    private Rate rate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { &quot;reservations&quot;, &quot;customer&quot; }, allowSetters = true)
+    private Payment payment;
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public Long getId() {
+<span class="fc" id="L90">        return this.id;</span>
+    }
+
+    public Reservation id(Long id) {
+<span class="fc" id="L94">        this.setId(id);</span>
+<span class="fc" id="L95">        return this;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L99">        this.id = id;</span>
+<span class="fc" id="L100">    }</span>
+
+    public Long getReservationID() {
+<span class="fc" id="L103">        return this.reservationID;</span>
+    }
+
+    public Reservation reservationID(Long reservationID) {
+<span class="fc" id="L107">        this.setReservationID(reservationID);</span>
+<span class="fc" id="L108">        return this;</span>
+    }
+
+    public void setReservationID(Long reservationID) {
+<span class="fc" id="L112">        this.reservationID = reservationID;</span>
+<span class="fc" id="L113">    }</span>
+
+    public Float getRequestedTime() {
+<span class="fc" id="L116">        return this.requestedTime;</span>
+    }
+
+    public Reservation requestedTime(Float requestedTime) {
+<span class="nc" id="L120">        this.setRequestedTime(requestedTime);</span>
+<span class="nc" id="L121">        return this;</span>
+    }
+
+    public void setRequestedTime(Float requestedTime) {
+<span class="nc" id="L125">        this.requestedTime = requestedTime;</span>
+<span class="nc" id="L126">    }</span>
+
+    public LocalDate getDate() {
+<span class="fc" id="L129">        return this.date;</span>
+    }
+
+    public Reservation date(LocalDate date) {
+<span class="nc" id="L133">        this.setDate(date);</span>
+<span class="nc" id="L134">        return this;</span>
+    }
+
+    public void setDate(LocalDate date) {
+<span class="nc" id="L138">        this.date = date;</span>
+<span class="nc" id="L139">    }</span>
+
+    public Float getStartTime() {
+<span class="fc" id="L142">        return this.startTime;</span>
+    }
+
+    public Reservation startTime(Float startTime) {
+<span class="nc" id="L146">        this.setStartTime(startTime);</span>
+<span class="nc" id="L147">        return this;</span>
+    }
+
+    public void setStartTime(Float startTime) {
+<span class="nc" id="L151">        this.startTime = startTime;</span>
+<span class="nc" id="L152">    }</span>
+
+    public Float getEndTime() {
+<span class="fc" id="L155">        return this.endTime;</span>
+    }
+
+    public Reservation endTime(Float endTime) {
+<span class="nc" id="L159">        this.setEndTime(endTime);</span>
+<span class="nc" id="L160">        return this;</span>
+    }
+
+    public void setEndTime(Float endTime) {
+<span class="nc" id="L164">        this.endTime = endTime;</span>
+<span class="nc" id="L165">    }</span>
+
+    public Float getWaitTime() {
+<span class="fc" id="L168">        return this.waitTime;</span>
+    }
+
+    public Reservation waitTime(Float waitTime) {
+<span class="nc" id="L172">        this.setWaitTime(waitTime);</span>
+<span class="nc" id="L173">        return this;</span>
+    }
+
+    public void setWaitTime(Float waitTime) {
+<span class="nc" id="L177">        this.waitTime = waitTime;</span>
+<span class="nc" id="L178">    }</span>
+
+    public Float getDriverRating() {
+<span class="fc" id="L181">        return this.driverRating;</span>
+    }
+
+    public Reservation driverRating(Float driverRating) {
+<span class="nc" id="L185">        this.setDriverRating(driverRating);</span>
+<span class="nc" id="L186">        return this;</span>
+    }
+
+    public void setDriverRating(Float driverRating) {
+<span class="nc" id="L190">        this.driverRating = driverRating;</span>
+<span class="nc" id="L191">    }</span>
+
+    public Float getCustomerRating() {
+<span class="fc" id="L194">        return this.customerRating;</span>
+    }
+
+    public Reservation customerRating(Float customerRating) {
+<span class="nc" id="L198">        this.setCustomerRating(customerRating);</span>
+<span class="nc" id="L199">        return this;</span>
+    }
+
+    public void setCustomerRating(Float customerRating) {
+<span class="nc" id="L203">        this.customerRating = customerRating;</span>
+<span class="nc" id="L204">    }</span>
+
+    public String getComment() {
+<span class="fc" id="L207">        return this.comment;</span>
+    }
+
+    public Reservation comment(String comment) {
+<span class="fc" id="L211">        this.setComment(comment);</span>
+<span class="fc" id="L212">        return this;</span>
+    }
+
+    public void setComment(String comment) {
+<span class="fc" id="L216">        this.comment = comment;</span>
+<span class="fc" id="L217">    }</span>
+
+    public Float getTripCost() {
+<span class="fc" id="L220">        return this.tripCost;</span>
+    }
+
+    public Reservation tripCost(Float tripCost) {
+<span class="nc" id="L224">        this.setTripCost(tripCost);</span>
+<span class="nc" id="L225">        return this;</span>
+    }
+
+    public void setTripCost(Float tripCost) {
+<span class="nc" id="L229">        this.tripCost = tripCost;</span>
+<span class="nc" id="L230">    }</span>
+
+    public Insurance getInsurance() {
+<span class="fc" id="L233">        return this.insurance;</span>
+    }
+
+    public void setInsurance(Insurance insurance) {
+<span class="fc" id="L237">        this.insurance = insurance;</span>
+<span class="fc" id="L238">    }</span>
+
+    public Reservation insurance(Insurance insurance) {
+<span class="fc" id="L241">        this.setInsurance(insurance);</span>
+<span class="fc" id="L242">        return this;</span>
+    }
+
+    public Location getPickupLocation() {
+<span class="fc" id="L246">        return this.pickupLocation;</span>
+    }
+
+    public void setPickupLocation(Location location) {
+<span class="fc" id="L250">        this.pickupLocation = location;</span>
+<span class="fc" id="L251">    }</span>
+
+    public Reservation pickupLocation(Location location) {
+<span class="fc" id="L254">        this.setPickupLocation(location);</span>
+<span class="fc" id="L255">        return this;</span>
+    }
+
+    public Location getDropoffLocation() {
+<span class="fc" id="L259">        return this.dropoffLocation;</span>
+    }
+
+    public void setDropoffLocation(Location location) {
+<span class="fc" id="L263">        this.dropoffLocation = location;</span>
+<span class="fc" id="L264">    }</span>
+
+    public Reservation dropoffLocation(Location location) {
+<span class="fc" id="L267">        this.setDropoffLocation(location);</span>
+<span class="fc" id="L268">        return this;</span>
+    }
+
+    public Customer getCustomer() {
+<span class="fc" id="L272">        return this.customer;</span>
+    }
+
+    public void setCustomer(Customer customer) {
+<span class="fc" id="L276">        this.customer = customer;</span>
+<span class="fc" id="L277">    }</span>
+
+    public Reservation customer(Customer customer) {
+<span class="fc" id="L280">        this.setCustomer(customer);</span>
+<span class="fc" id="L281">        return this;</span>
+    }
+
+    public Driver getDriver() {
+<span class="fc" id="L285">        return this.driver;</span>
+    }
+
+    public void setDriver(Driver driver) {
+<span class="fc" id="L289">        this.driver = driver;</span>
+<span class="fc" id="L290">    }</span>
+
+    public Reservation driver(Driver driver) {
+<span class="fc" id="L293">        this.setDriver(driver);</span>
+<span class="fc" id="L294">        return this;</span>
+    }
+
+    public Vehicle getVehicle() {
+<span class="fc" id="L298">        return this.vehicle;</span>
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+<span class="fc" id="L302">        this.vehicle = vehicle;</span>
+<span class="fc" id="L303">    }</span>
+
+    public Reservation vehicle(Vehicle vehicle) {
+<span class="fc" id="L306">        this.setVehicle(vehicle);</span>
+<span class="fc" id="L307">        return this;</span>
+    }
+
+    public Rate getRate() {
+<span class="fc" id="L311">        return this.rate;</span>
+    }
+
+    public void setRate(Rate rate) {
+<span class="fc" id="L315">        this.rate = rate;</span>
+<span class="fc" id="L316">    }</span>
+
+    public Reservation rate(Rate rate) {
+<span class="fc" id="L319">        this.setRate(rate);</span>
+<span class="fc" id="L320">        return this;</span>
+    }
+
+    public Payment getPayment() {
+<span class="fc" id="L324">        return this.payment;</span>
+    }
+
+    public void setPayment(Payment payment) {
+<span class="fc" id="L328">        this.payment = payment;</span>
+<span class="fc" id="L329">    }</span>
+
+    public Reservation payment(Payment payment) {
+<span class="fc" id="L332">        this.setPayment(payment);</span>
+<span class="fc" id="L333">        return this;</span>
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L340" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L341">            return true;</span>
+        }
+<span class="fc bfc" id="L343" title="All 2 branches covered.">        if (!(o instanceof Reservation)) {</span>
+<span class="fc" id="L344">            return false;</span>
+        }
+<span class="fc bfc" id="L346" title="All 4 branches covered.">        return getId() != null &amp;&amp; getId().equals(((Reservation) o).getId());</span>
+    }
+
+    @Override
+    public int hashCode() {
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+<span class="fc" id="L352">        return getClass().hashCode();</span>
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+<span class="fc" id="L358">        return &quot;Reservation{&quot; +</span>
+<span class="fc" id="L359">            &quot;id=&quot; + getId() +</span>
+<span class="fc" id="L360">            &quot;, reservationID=&quot; + getReservationID() +</span>
+<span class="fc" id="L361">            &quot;, requestedTime=&quot; + getRequestedTime() +</span>
+<span class="fc" id="L362">            &quot;, date='&quot; + getDate() + &quot;'&quot; +</span>
+<span class="fc" id="L363">            &quot;, startTime=&quot; + getStartTime() +</span>
+<span class="fc" id="L364">            &quot;, endTime=&quot; + getEndTime() +</span>
+<span class="fc" id="L365">            &quot;, waitTime=&quot; + getWaitTime() +</span>
+<span class="fc" id="L366">            &quot;, driverRating=&quot; + getDriverRating() +</span>
+<span class="fc" id="L367">            &quot;, customerRating=&quot; + getCustomerRating() +</span>
+<span class="fc" id="L368">            &quot;, comment='&quot; + getComment() + &quot;'&quot; +</span>
+<span class="fc" id="L369">            &quot;, tripCost=&quot; + getTripCost() +</span>
+            &quot;}&quot;;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

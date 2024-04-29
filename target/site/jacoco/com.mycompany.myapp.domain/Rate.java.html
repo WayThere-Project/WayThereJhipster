@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Rate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.domain</a> &gt; <span class="el_source">Rate.java</span></div><h1>Rate.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+/**
+ * A Rate.
+ */
+@Entity
+@Table(name = &quot;rate&quot;)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@SuppressWarnings(&quot;common-java:DuplicatedBlocks&quot;)
+<span class="fc" id="L18">public class Rate implements Serializable {</span>
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+    private Long id;
+
+    @Column(name = &quot;rate_id&quot;)
+    private Long rateID;
+
+    @Column(name = &quot;time_of_day&quot;)
+    private Integer timeOfDay;
+
+    @Column(name = &quot;vehicle_size&quot;)
+    private Integer vehicleSize;
+
+    @Column(name = &quot;base_rate&quot;)
+    private Integer baseRate;
+
+<span class="fc" id="L39">    @OneToMany(fetch = FetchType.LAZY, mappedBy = &quot;rate&quot;)</span>
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(
+        value = { &quot;insurance&quot;, &quot;pickupLocation&quot;, &quot;dropoffLocation&quot;, &quot;customer&quot;, &quot;driver&quot;, &quot;vehicle&quot;, &quot;rate&quot;, &quot;payment&quot; },
+        allowSetters = true
+    )
+    private Set&lt;Reservation&gt; reservations = new HashSet&lt;&gt;();
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public Long getId() {
+<span class="fc" id="L50">        return this.id;</span>
+    }
+
+    public Rate id(Long id) {
+<span class="fc" id="L54">        this.setId(id);</span>
+<span class="fc" id="L55">        return this;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L59">        this.id = id;</span>
+<span class="fc" id="L60">    }</span>
+
+    public Long getRateID() {
+<span class="fc" id="L63">        return this.rateID;</span>
+    }
+
+    public Rate rateID(Long rateID) {
+<span class="fc" id="L67">        this.setRateID(rateID);</span>
+<span class="fc" id="L68">        return this;</span>
+    }
+
+    public void setRateID(Long rateID) {
+<span class="fc" id="L72">        this.rateID = rateID;</span>
+<span class="fc" id="L73">    }</span>
+
+    public Integer getTimeOfDay() {
+<span class="fc" id="L76">        return this.timeOfDay;</span>
+    }
+
+    public Rate timeOfDay(Integer timeOfDay) {
+<span class="fc" id="L80">        this.setTimeOfDay(timeOfDay);</span>
+<span class="fc" id="L81">        return this;</span>
+    }
+
+    public void setTimeOfDay(Integer timeOfDay) {
+<span class="fc" id="L85">        this.timeOfDay = timeOfDay;</span>
+<span class="fc" id="L86">    }</span>
+
+    public Integer getVehicleSize() {
+<span class="fc" id="L89">        return this.vehicleSize;</span>
+    }
+
+    public Rate vehicleSize(Integer vehicleSize) {
+<span class="fc" id="L93">        this.setVehicleSize(vehicleSize);</span>
+<span class="fc" id="L94">        return this;</span>
+    }
+
+    public void setVehicleSize(Integer vehicleSize) {
+<span class="fc" id="L98">        this.vehicleSize = vehicleSize;</span>
+<span class="fc" id="L99">    }</span>
+
+    public Integer getBaseRate() {
+<span class="fc" id="L102">        return this.baseRate;</span>
+    }
+
+    public Rate baseRate(Integer baseRate) {
+<span class="fc" id="L106">        this.setBaseRate(baseRate);</span>
+<span class="fc" id="L107">        return this;</span>
+    }
+
+    public void setBaseRate(Integer baseRate) {
+<span class="fc" id="L111">        this.baseRate = baseRate;</span>
+<span class="fc" id="L112">    }</span>
+
+    public Set&lt;Reservation&gt; getReservations() {
+<span class="fc" id="L115">        return this.reservations;</span>
+    }
+
+    public void setReservations(Set&lt;Reservation&gt; reservations) {
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (this.reservations != null) {</span>
+<span class="fc" id="L120">            this.reservations.forEach(i -&gt; i.setRate(null));</span>
+        }
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (reservations != null) {</span>
+<span class="fc" id="L123">            reservations.forEach(i -&gt; i.setRate(this));</span>
+        }
+<span class="fc" id="L125">        this.reservations = reservations;</span>
+<span class="fc" id="L126">    }</span>
+
+    public Rate reservations(Set&lt;Reservation&gt; reservations) {
+<span class="fc" id="L129">        this.setReservations(reservations);</span>
+<span class="fc" id="L130">        return this;</span>
+    }
+
+    public Rate addReservations(Reservation reservation) {
+<span class="fc" id="L134">        this.reservations.add(reservation);</span>
+<span class="fc" id="L135">        reservation.setRate(this);</span>
+<span class="fc" id="L136">        return this;</span>
+    }
+
+    public Rate removeReservations(Reservation reservation) {
+<span class="fc" id="L140">        this.reservations.remove(reservation);</span>
+<span class="fc" id="L141">        reservation.setRate(null);</span>
+<span class="fc" id="L142">        return this;</span>
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L150">            return true;</span>
+        }
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (!(o instanceof Rate)) {</span>
+<span class="fc" id="L153">            return false;</span>
+        }
+<span class="fc bfc" id="L155" title="All 4 branches covered.">        return getId() != null &amp;&amp; getId().equals(((Rate) o).getId());</span>
+    }
+
+    @Override
+    public int hashCode() {
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+<span class="fc" id="L161">        return getClass().hashCode();</span>
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+<span class="fc" id="L167">        return &quot;Rate{&quot; +</span>
+<span class="fc" id="L168">            &quot;id=&quot; + getId() +</span>
+<span class="fc" id="L169">            &quot;, rateID=&quot; + getRateID() +</span>
+<span class="fc" id="L170">            &quot;, timeOfDay=&quot; + getTimeOfDay() +</span>
+<span class="fc" id="L171">            &quot;, vehicleSize=&quot; + getVehicleSize() +</span>
+<span class="fc" id="L172">            &quot;, baseRate=&quot; + getBaseRate() +</span>
+            &quot;}&quot;;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

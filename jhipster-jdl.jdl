@@ -1,0 +1,86 @@
+entity Customer {
+  customerID Long,
+  fname String,
+  lname String,
+  dob LocalDate
+}
+
+entity Driver {
+  driverID Long,
+  fname String,
+  lname String,
+  dob LocalDate
+}
+
+entity Vehicle {
+  vehicleID Long,
+  vehicleSize Integer,
+  make String,
+  lastServicingDate LocalDate,
+  model String
+}
+
+entity Location {
+  locationID Long,
+  landmarkName String,
+  addressLine1 String,
+  addressLine2 String,
+  city String,
+  state String,
+  country String,
+  zipCode Integer
+}
+
+entity Insurance {
+  insID Long,
+  insDescription String,
+  startDate LocalDate,
+  expirationDate LocalDate
+}
+
+entity Payment {
+  paymentID Long,
+  paymentMode Integer
+}
+
+entity Rate {
+  rateID Long,
+  timeOfDay Integer,
+  vehicleSize Integer,
+  baseRate Integer
+}
+
+entity Reservation {
+  reservationID Long,
+  requestedTime Float,
+  date LocalDate,
+  startTime Float,
+  endTime Float,
+  waitTime Float,
+  driverRating Float,
+  customerRating Float,
+  comment String,
+  tripCost Float
+}
+
+relationship OneToOne {
+  Driver{vehicle} to Vehicle
+}
+
+relationship OneToMany {
+  Customer{payments} to Payment{customer},
+  Customer{reservations} to Reservation{customer},
+  Driver{reservations} to Reservation{driver},
+  Vehicle{reservations} to Reservation{vehicle},
+  Rate{reservations} to Reservation{rate},
+  Payment{reservation} to Reservation{payment}
+}
+
+relationship ManyToOne {
+  Reservation{pickupLocation} to Location,
+  Reservation{dropoffLocation} to Location
+}
+
+relationship OneToOne {
+  Reservation{insurance} to Insurance
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.15.0">
+<file name="/Users/abukar/Desktop/WayThereJhipster/pom.xml">
+</file>
+<file name="/Users/abukar/Desktop/WayThereJhipster/README.md">
+</file>
+<file name="/Users/abukar/Desktop/WayThereJhipster/src/main/resources/i18n/messages_en.properties">
+</file>
+<file name="/Users/abukar/Desktop/WayThereJhipster/src/main/resources/i18n/messages.properties">
+</file>
+<file name="/Users/abukar/Desktop/WayThereJhipster/src/main/resources/.h2.server.properties">
+</file>
+<file name="/Users/abukar/Desktop/WayThereJhipster/src/test/resources/junit-platform.properties">
+</file>
+<file name="/Users/abukar/Desktop/WayThereJhipster/src/test/resources/i18n/messages_en.properties">
+</file>
+</checkstyle>

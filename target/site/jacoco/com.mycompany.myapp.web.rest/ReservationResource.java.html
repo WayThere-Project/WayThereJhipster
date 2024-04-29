@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReservationResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.web.rest</a> &gt; <span class="el_source">ReservationResource.java</span></div><h1>ReservationResource.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.web.rest;
+
+import com.mycompany.myapp.domain.Reservation;
+import com.mycompany.myapp.repository.ReservationRepository;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+/**
+ * REST controller for managing {@link com.mycompany.myapp.domain.Reservation}.
+ */
+@RestController
+@RequestMapping(&quot;/api/reservations&quot;)
+@Transactional
+public class ReservationResource {
+
+<span class="nc" id="L28">    private final Logger log = LoggerFactory.getLogger(ReservationResource.class);</span>
+
+    private static final String ENTITY_NAME = &quot;reservation&quot;;
+
+    @Value(&quot;${jhipster.clientApp.name}&quot;)
+    private String applicationName;
+
+    private final ReservationRepository reservationRepository;
+
+<span class="nc" id="L37">    public ReservationResource(ReservationRepository reservationRepository) {</span>
+<span class="nc" id="L38">        this.reservationRepository = reservationRepository;</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * {@code POST  /reservations} : Create a new reservation.
+     *
+     * @param reservation the reservation to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new reservation, or with status {@code 400 (Bad Request)} if the reservation has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping(&quot;&quot;)
+    public ResponseEntity&lt;Reservation&gt; createReservation(@RequestBody Reservation reservation) throws URISyntaxException {
+<span class="nc" id="L50">        log.debug(&quot;REST request to save Reservation : {}&quot;, reservation);</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (reservation.getId() != null) {</span>
+<span class="nc" id="L52">            throw new BadRequestAlertException(&quot;A new reservation cannot already have an ID&quot;, ENTITY_NAME, &quot;idexists&quot;);</span>
+        }
+<span class="nc" id="L54">        reservation = reservationRepository.save(reservation);</span>
+<span class="nc" id="L55">        return ResponseEntity.created(new URI(&quot;/api/reservations/&quot; + reservation.getId()))</span>
+<span class="nc" id="L56">            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, reservation.getId().toString()))</span>
+<span class="nc" id="L57">            .body(reservation);</span>
+    }
+
+    /**
+     * {@code PUT  /reservations/:id} : Updates an existing reservation.
+     *
+     * @param id the id of the reservation to save.
+     * @param reservation the reservation to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated reservation,
+     * or with status {@code 400 (Bad Request)} if the reservation is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the reservation couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Reservation&gt; updateReservation(
+        @PathVariable(value = &quot;id&quot;, required = false) final Long id,
+        @RequestBody Reservation reservation
+    ) throws URISyntaxException {
+<span class="nc" id="L75">        log.debug(&quot;REST request to update Reservation : {}, {}&quot;, id, reservation);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (reservation.getId() == null) {</span>
+<span class="nc" id="L77">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="nc bnc" id="L79" title="All 2 branches missed.">        if (!Objects.equals(id, reservation.getId())) {</span>
+<span class="nc" id="L80">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (!reservationRepository.existsById(id)) {</span>
+<span class="nc" id="L84">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="nc" id="L87">        reservation = reservationRepository.save(reservation);</span>
+<span class="nc" id="L88">        return ResponseEntity.ok()</span>
+<span class="nc" id="L89">            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, reservation.getId().toString()))</span>
+<span class="nc" id="L90">            .body(reservation);</span>
+    }
+
+    /**
+     * {@code PATCH  /reservations/:id} : Partial updates given fields of an existing reservation, field will ignore if it is null
+     *
+     * @param id the id of the reservation to save.
+     * @param reservation the reservation to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated reservation,
+     * or with status {@code 400 (Bad Request)} if the reservation is not valid,
+     * or with status {@code 404 (Not Found)} if the reservation is not found,
+     * or with status {@code 500 (Internal Server Error)} if the reservation couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = &quot;/{id}&quot;, consumes = { &quot;application/json&quot;, &quot;application/merge-patch+json&quot; })
+    public ResponseEntity&lt;Reservation&gt; partialUpdateReservation(
+        @PathVariable(value = &quot;id&quot;, required = false) final Long id,
+        @RequestBody Reservation reservation
+    ) throws URISyntaxException {
+<span class="nc" id="L109">        log.debug(&quot;REST request to partial update Reservation partially : {}, {}&quot;, id, reservation);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (reservation.getId() == null) {</span>
+<span class="nc" id="L111">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (!Objects.equals(id, reservation.getId())) {</span>
+<span class="nc" id="L114">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (!reservationRepository.existsById(id)) {</span>
+<span class="nc" id="L118">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="nc" id="L121">        Optional&lt;Reservation&gt; result = reservationRepository</span>
+<span class="nc" id="L122">            .findById(reservation.getId())</span>
+<span class="nc" id="L123">            .map(existingReservation -&gt; {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                if (reservation.getReservationID() != null) {</span>
+<span class="nc" id="L125">                    existingReservation.setReservationID(reservation.getReservationID());</span>
+                }
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                if (reservation.getRequestedTime() != null) {</span>
+<span class="nc" id="L128">                    existingReservation.setRequestedTime(reservation.getRequestedTime());</span>
+                }
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                if (reservation.getDate() != null) {</span>
+<span class="nc" id="L131">                    existingReservation.setDate(reservation.getDate());</span>
+                }
+<span class="nc bnc" id="L133" title="All 2 branches missed.">                if (reservation.getStartTime() != null) {</span>
+<span class="nc" id="L134">                    existingReservation.setStartTime(reservation.getStartTime());</span>
+                }
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                if (reservation.getEndTime() != null) {</span>
+<span class="nc" id="L137">                    existingReservation.setEndTime(reservation.getEndTime());</span>
+                }
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                if (reservation.getWaitTime() != null) {</span>
+<span class="nc" id="L140">                    existingReservation.setWaitTime(reservation.getWaitTime());</span>
+                }
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                if (reservation.getDriverRating() != null) {</span>
+<span class="nc" id="L143">                    existingReservation.setDriverRating(reservation.getDriverRating());</span>
+                }
+<span class="nc bnc" id="L145" title="All 2 branches missed.">                if (reservation.getCustomerRating() != null) {</span>
+<span class="nc" id="L146">                    existingReservation.setCustomerRating(reservation.getCustomerRating());</span>
+                }
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                if (reservation.getComment() != null) {</span>
+<span class="nc" id="L149">                    existingReservation.setComment(reservation.getComment());</span>
+                }
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                if (reservation.getTripCost() != null) {</span>
+<span class="nc" id="L152">                    existingReservation.setTripCost(reservation.getTripCost());</span>
+                }
+
+<span class="nc" id="L155">                return existingReservation;</span>
+            })
+<span class="nc" id="L157">            .map(reservationRepository::save);</span>
+
+<span class="nc" id="L159">        return ResponseUtil.wrapOrNotFound(</span>
+            result,
+<span class="nc" id="L161">            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, reservation.getId().toString())</span>
+        );
+    }
+
+    /**
+     * {@code GET  /reservations} : get all the reservations.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of reservations in body.
+     */
+    @GetMapping(&quot;&quot;)
+    public List&lt;Reservation&gt; getAllReservations() {
+<span class="nc" id="L172">        log.debug(&quot;REST request to get all Reservations&quot;);</span>
+<span class="nc" id="L173">        return reservationRepository.findAll();</span>
+    }
+
+    /**
+     * {@code GET  /reservations/:id} : get the &quot;id&quot; reservation.
+     *
+     * @param id the id of the reservation to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the reservation, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Reservation&gt; getReservation(@PathVariable(&quot;id&quot;) Long id) {
+<span class="nc" id="L184">        log.debug(&quot;REST request to get Reservation : {}&quot;, id);</span>
+<span class="nc" id="L185">        Optional&lt;Reservation&gt; reservation = reservationRepository.findById(id);</span>
+<span class="nc" id="L186">        return ResponseUtil.wrapOrNotFound(reservation);</span>
+    }
+
+    /**
+     * {@code DELETE  /reservations/:id} : delete the &quot;id&quot; reservation.
+     *
+     * @param id the id of the reservation to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteReservation(@PathVariable(&quot;id&quot;) Long id) {
+<span class="nc" id="L197">        log.debug(&quot;REST request to delete Reservation : {}&quot;, id);</span>
+<span class="nc" id="L198">        reservationRepository.deleteById(id);</span>
+<span class="nc" id="L199">        return ResponseEntity.noContent()</span>
+<span class="nc" id="L200">            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))</span>
+<span class="nc" id="L201">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

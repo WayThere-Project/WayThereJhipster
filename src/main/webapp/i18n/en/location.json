@@ -1,0 +1,31 @@
+{
+  "wayThereJhipsterApp": {
+    "location": {
+      "home": {
+        "title": "Locations",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Location",
+        "createOrEditLabel": "Create or edit a Location",
+        "notFound": "No Locations found"
+      },
+      "created": "A new Location is created with identifier {{ param }}",
+      "updated": "A Location is updated with identifier {{ param }}",
+      "deleted": "A Location is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Location {{ id }}?"
+      },
+      "detail": {
+        "title": "Location"
+      },
+      "id": "ID",
+      "locationID": "Location ID",
+      "landmarkName": "Landmark Name",
+      "addressLine1": "Address Line 1",
+      "addressLine2": "Address Line 2",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "zipCode": "Zip Code"
+    }
+  }
+}

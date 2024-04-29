@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RateResource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.web.rest</a> &gt; <span class="el_source">RateResource.java</span></div><h1>RateResource.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.web.rest;
+
+import com.mycompany.myapp.domain.Rate;
+import com.mycompany.myapp.repository.RateRepository;
+import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
+
+/**
+ * REST controller for managing {@link com.mycompany.myapp.domain.Rate}.
+ */
+@RestController
+@RequestMapping(&quot;/api/rates&quot;)
+@Transactional
+public class RateResource {
+
+<span class="fc" id="L28">    private final Logger log = LoggerFactory.getLogger(RateResource.class);</span>
+
+    private static final String ENTITY_NAME = &quot;rate&quot;;
+
+    @Value(&quot;${jhipster.clientApp.name}&quot;)
+    private String applicationName;
+
+    private final RateRepository rateRepository;
+
+<span class="fc" id="L37">    public RateResource(RateRepository rateRepository) {</span>
+<span class="fc" id="L38">        this.rateRepository = rateRepository;</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * {@code POST  /rates} : Create a new rate.
+     *
+     * @param rate the rate to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new rate, or with status {@code 400 (Bad Request)} if the rate has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping(&quot;&quot;)
+    public ResponseEntity&lt;Rate&gt; createRate(@RequestBody Rate rate) throws URISyntaxException {
+<span class="fc" id="L50">        log.debug(&quot;REST request to save Rate : {}&quot;, rate);</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (rate.getId() != null) {</span>
+<span class="fc" id="L52">            throw new BadRequestAlertException(&quot;A new rate cannot already have an ID&quot;, ENTITY_NAME, &quot;idexists&quot;);</span>
+        }
+<span class="fc" id="L54">        rate = rateRepository.save(rate);</span>
+<span class="fc" id="L55">        return ResponseEntity.created(new URI(&quot;/api/rates/&quot; + rate.getId()))</span>
+<span class="fc" id="L56">            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, rate.getId().toString()))</span>
+<span class="fc" id="L57">            .body(rate);</span>
+    }
+
+    /**
+     * {@code PUT  /rates/:id} : Updates an existing rate.
+     *
+     * @param id the id of the rate to save.
+     * @param rate the rate to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated rate,
+     * or with status {@code 400 (Bad Request)} if the rate is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the rate couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Rate&gt; updateRate(@PathVariable(value = &quot;id&quot;, required = false) final Long id, @RequestBody Rate rate)
+        throws URISyntaxException {
+<span class="fc" id="L73">        log.debug(&quot;REST request to update Rate : {}, {}&quot;, id, rate);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (rate.getId() == null) {</span>
+<span class="nc" id="L75">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (!Objects.equals(id, rate.getId())) {</span>
+<span class="fc" id="L78">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (!rateRepository.existsById(id)) {</span>
+<span class="fc" id="L82">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="fc" id="L85">        rate = rateRepository.save(rate);</span>
+<span class="fc" id="L86">        return ResponseEntity.ok()</span>
+<span class="fc" id="L87">            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, rate.getId().toString()))</span>
+<span class="fc" id="L88">            .body(rate);</span>
+    }
+
+    /**
+     * {@code PATCH  /rates/:id} : Partial updates given fields of an existing rate, field will ignore if it is null
+     *
+     * @param id the id of the rate to save.
+     * @param rate the rate to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated rate,
+     * or with status {@code 400 (Bad Request)} if the rate is not valid,
+     * or with status {@code 404 (Not Found)} if the rate is not found,
+     * or with status {@code 500 (Internal Server Error)} if the rate couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = &quot;/{id}&quot;, consumes = { &quot;application/json&quot;, &quot;application/merge-patch+json&quot; })
+    public ResponseEntity&lt;Rate&gt; partialUpdateRate(@PathVariable(value = &quot;id&quot;, required = false) final Long id, @RequestBody Rate rate)
+        throws URISyntaxException {
+<span class="fc" id="L105">        log.debug(&quot;REST request to partial update Rate partially : {}, {}&quot;, id, rate);</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (rate.getId() == null) {</span>
+<span class="nc" id="L107">            throw new BadRequestAlertException(&quot;Invalid id&quot;, ENTITY_NAME, &quot;idnull&quot;);</span>
+        }
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (!Objects.equals(id, rate.getId())) {</span>
+<span class="fc" id="L110">            throw new BadRequestAlertException(&quot;Invalid ID&quot;, ENTITY_NAME, &quot;idinvalid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (!rateRepository.existsById(id)) {</span>
+<span class="fc" id="L114">            throw new BadRequestAlertException(&quot;Entity not found&quot;, ENTITY_NAME, &quot;idnotfound&quot;);</span>
+        }
+
+<span class="fc" id="L117">        Optional&lt;Rate&gt; result = rateRepository</span>
+<span class="fc" id="L118">            .findById(rate.getId())</span>
+<span class="fc" id="L119">            .map(existingRate -&gt; {</span>
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">                if (rate.getRateID() != null) {</span>
+<span class="fc" id="L121">                    existingRate.setRateID(rate.getRateID());</span>
+                }
+<span class="fc bfc" id="L123" title="All 2 branches covered.">                if (rate.getTimeOfDay() != null) {</span>
+<span class="fc" id="L124">                    existingRate.setTimeOfDay(rate.getTimeOfDay());</span>
+                }
+<span class="fc bfc" id="L126" title="All 2 branches covered.">                if (rate.getVehicleSize() != null) {</span>
+<span class="fc" id="L127">                    existingRate.setVehicleSize(rate.getVehicleSize());</span>
+                }
+<span class="fc bfc" id="L129" title="All 2 branches covered.">                if (rate.getBaseRate() != null) {</span>
+<span class="fc" id="L130">                    existingRate.setBaseRate(rate.getBaseRate());</span>
+                }
+
+<span class="fc" id="L133">                return existingRate;</span>
+            })
+<span class="fc" id="L135">            .map(rateRepository::save);</span>
+
+<span class="fc" id="L137">        return ResponseUtil.wrapOrNotFound(</span>
+            result,
+<span class="fc" id="L139">            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, rate.getId().toString())</span>
+        );
+    }
+
+    /**
+     * {@code GET  /rates} : get all the rates.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of rates in body.
+     */
+    @GetMapping(&quot;&quot;)
+    public List&lt;Rate&gt; getAllRates() {
+<span class="fc" id="L150">        log.debug(&quot;REST request to get all Rates&quot;);</span>
+<span class="fc" id="L151">        return rateRepository.findAll();</span>
+    }
+
+    /**
+     * {@code GET  /rates/:id} : get the &quot;id&quot; rate.
+     *
+     * @param id the id of the rate to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the rate, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Rate&gt; getRate(@PathVariable(&quot;id&quot;) Long id) {
+<span class="fc" id="L162">        log.debug(&quot;REST request to get Rate : {}&quot;, id);</span>
+<span class="fc" id="L163">        Optional&lt;Rate&gt; rate = rateRepository.findById(id);</span>
+<span class="fc" id="L164">        return ResponseUtil.wrapOrNotFound(rate);</span>
+    }
+
+    /**
+     * {@code DELETE  /rates/:id} : delete the &quot;id&quot; rate.
+     *
+     * @param id the id of the rate to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteRate(@PathVariable(&quot;id&quot;) Long id) {
+<span class="fc" id="L175">        log.debug(&quot;REST request to delete Rate : {}&quot;, id);</span>
+<span class="fc" id="L176">        rateRepository.deleteById(id);</span>
+<span class="fc" id="L177">        return ResponseEntity.noContent()</span>
+<span class="fc" id="L178">            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))</span>
+<span class="fc" id="L179">            .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

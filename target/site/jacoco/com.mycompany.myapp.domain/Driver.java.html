@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Driver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.domain</a> &gt; <span class="el_source">Driver.java</span></div><h1>Driver.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+/**
+ * A Driver.
+ */
+@Entity
+@Table(name = &quot;driver&quot;)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@SuppressWarnings(&quot;common-java:DuplicatedBlocks&quot;)
+<span class="fc" id="L19">public class Driver implements Serializable {</span>
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+    private Long id;
+
+    @Column(name = &quot;driver_id&quot;)
+    private Long driverID;
+
+    @Column(name = &quot;fname&quot;)
+    private String fname;
+
+    @Column(name = &quot;lname&quot;)
+    private String lname;
+
+    @Column(name = &quot;dob&quot;)
+    private LocalDate dob;
+
+    @JsonIgnoreProperties(value = { &quot;reservations&quot;, &quot;driver&quot; }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Vehicle vehicle;
+
+<span class="fc" id="L45">    @OneToMany(fetch = FetchType.LAZY, mappedBy = &quot;driver&quot;)</span>
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(
+        value = { &quot;insurance&quot;, &quot;pickupLocation&quot;, &quot;dropoffLocation&quot;, &quot;customer&quot;, &quot;driver&quot;, &quot;vehicle&quot;, &quot;rate&quot;, &quot;payment&quot; },
+        allowSetters = true
+    )
+    private Set&lt;Reservation&gt; reservations = new HashSet&lt;&gt;();
+
+    // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public Long getId() {
+<span class="fc" id="L56">        return this.id;</span>
+    }
+
+    public Driver id(Long id) {
+<span class="fc" id="L60">        this.setId(id);</span>
+<span class="fc" id="L61">        return this;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L65">        this.id = id;</span>
+<span class="fc" id="L66">    }</span>
+
+    public Long getDriverID() {
+<span class="fc" id="L69">        return this.driverID;</span>
+    }
+
+    public Driver driverID(Long driverID) {
+<span class="fc" id="L73">        this.setDriverID(driverID);</span>
+<span class="fc" id="L74">        return this;</span>
+    }
+
+    public void setDriverID(Long driverID) {
+<span class="fc" id="L78">        this.driverID = driverID;</span>
+<span class="fc" id="L79">    }</span>
+
+    public String getFname() {
+<span class="fc" id="L82">        return this.fname;</span>
+    }
+
+    public Driver fname(String fname) {
+<span class="fc" id="L86">        this.setFname(fname);</span>
+<span class="fc" id="L87">        return this;</span>
+    }
+
+    public void setFname(String fname) {
+<span class="fc" id="L91">        this.fname = fname;</span>
+<span class="fc" id="L92">    }</span>
+
+    public String getLname() {
+<span class="fc" id="L95">        return this.lname;</span>
+    }
+
+    public Driver lname(String lname) {
+<span class="fc" id="L99">        this.setLname(lname);</span>
+<span class="fc" id="L100">        return this;</span>
+    }
+
+    public void setLname(String lname) {
+<span class="fc" id="L104">        this.lname = lname;</span>
+<span class="fc" id="L105">    }</span>
+
+    public LocalDate getDob() {
+<span class="fc" id="L108">        return this.dob;</span>
+    }
+
+    public Driver dob(LocalDate dob) {
+<span class="nc" id="L112">        this.setDob(dob);</span>
+<span class="nc" id="L113">        return this;</span>
+    }
+
+    public void setDob(LocalDate dob) {
+<span class="nc" id="L117">        this.dob = dob;</span>
+<span class="nc" id="L118">    }</span>
+
+    public Vehicle getVehicle() {
+<span class="fc" id="L121">        return this.vehicle;</span>
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+<span class="fc" id="L125">        this.vehicle = vehicle;</span>
+<span class="fc" id="L126">    }</span>
+
+    public Driver vehicle(Vehicle vehicle) {
+<span class="fc" id="L129">        this.setVehicle(vehicle);</span>
+<span class="fc" id="L130">        return this;</span>
+    }
+
+    public Set&lt;Reservation&gt; getReservations() {
+<span class="fc" id="L134">        return this.reservations;</span>
+    }
+
+    public void setReservations(Set&lt;Reservation&gt; reservations) {
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        if (this.reservations != null) {</span>
+<span class="fc" id="L139">            this.reservations.forEach(i -&gt; i.setDriver(null));</span>
+        }
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        if (reservations != null) {</span>
+<span class="fc" id="L142">            reservations.forEach(i -&gt; i.setDriver(this));</span>
+        }
+<span class="fc" id="L144">        this.reservations = reservations;</span>
+<span class="fc" id="L145">    }</span>
+
+    public Driver reservations(Set&lt;Reservation&gt; reservations) {
+<span class="fc" id="L148">        this.setReservations(reservations);</span>
+<span class="fc" id="L149">        return this;</span>
+    }
+
+    public Driver addReservations(Reservation reservation) {
+<span class="fc" id="L153">        this.reservations.add(reservation);</span>
+<span class="fc" id="L154">        reservation.setDriver(this);</span>
+<span class="fc" id="L155">        return this;</span>
+    }
+
+    public Driver removeReservations(Reservation reservation) {
+<span class="fc" id="L159">        this.reservations.remove(reservation);</span>
+<span class="fc" id="L160">        reservation.setDriver(null);</span>
+<span class="fc" id="L161">        return this;</span>
+    }
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L169">            return true;</span>
+        }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (!(o instanceof Driver)) {</span>
+<span class="fc" id="L172">            return false;</span>
+        }
+<span class="fc bfc" id="L174" title="All 4 branches covered.">        return getId() != null &amp;&amp; getId().equals(((Driver) o).getId());</span>
+    }
+
+    @Override
+    public int hashCode() {
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+<span class="fc" id="L180">        return getClass().hashCode();</span>
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+<span class="fc" id="L186">        return &quot;Driver{&quot; +</span>
+<span class="fc" id="L187">            &quot;id=&quot; + getId() +</span>
+<span class="fc" id="L188">            &quot;, driverID=&quot; + getDriverID() +</span>
+<span class="fc" id="L189">            &quot;, fname='&quot; + getFname() + &quot;'&quot; +</span>
+<span class="fc" id="L190">            &quot;, lname='&quot; + getLname() + &quot;'&quot; +</span>
+<span class="fc" id="L191">            &quot;, dob='&quot; + getDob() + &quot;'&quot; +</span>
+            &quot;}&quot;;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Reservation_.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Way There Jhipster</a> &gt; <a href="index.source.html" class="el_package">com.mycompany.myapp.domain</a> &gt; <span class="el_source">Reservation_.java</span></div><h1>Reservation_.java</h1><pre class="source lang-java linenums">package com.mycompany.myapp.domain;
+
+import jakarta.annotation.Generated;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.StaticMetamodel;
+import java.time.LocalDate;
+
+@StaticMetamodel(Reservation.class)
+@Generated(&quot;org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor&quot;)
+<span class="nc" id="L11">public abstract class Reservation_ {</span>
+
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#date
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, LocalDate&gt; date;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#insurance
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Insurance&gt; insurance;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#dropoffLocation
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Location&gt; dropoffLocation;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#pickupLocation
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Location&gt; pickupLocation;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#vehicle
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Vehicle&gt; vehicle;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#customerRating
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; customerRating;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#reservationID
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Long&gt; reservationID;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#driver
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Driver&gt; driver;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#requestedTime
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; requestedTime;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#rate
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Rate&gt; rate;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#tripCost
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; tripCost;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#startTime
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; startTime;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#comment
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, String&gt; comment;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#payment
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Payment&gt; payment;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#id
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Long&gt; id;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#endTime
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; endTime;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#driverRating
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; driverRating;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation
+	 **/
+	public static volatile EntityType&lt;Reservation&gt; class_;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#waitTime
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Float&gt; waitTime;
+	
+	/**
+	 * @see com.mycompany.myapp.domain.Reservation#customer
+	 **/
+	public static volatile SingularAttribute&lt;Reservation, Customer&gt; customer;
+
+	public static final String DATE = &quot;date&quot;;
+	public static final String INSURANCE = &quot;insurance&quot;;
+	public static final String DROPOFF_LOCATION = &quot;dropoffLocation&quot;;
+	public static final String PICKUP_LOCATION = &quot;pickupLocation&quot;;
+	public static final String VEHICLE = &quot;vehicle&quot;;
+	public static final String CUSTOMER_RATING = &quot;customerRating&quot;;
+	public static final String RESERVATION_ID = &quot;reservationID&quot;;
+	public static final String DRIVER = &quot;driver&quot;;
+	public static final String REQUESTED_TIME = &quot;requestedTime&quot;;
+	public static final String RATE = &quot;rate&quot;;
+	public static final String TRIP_COST = &quot;tripCost&quot;;
+	public static final String START_TIME = &quot;startTime&quot;;
+	public static final String COMMENT = &quot;comment&quot;;
+	public static final String PAYMENT = &quot;payment&quot;;
+	public static final String ID = &quot;id&quot;;
+	public static final String END_TIME = &quot;endTime&quot;;
+	public static final String DRIVER_RATING = &quot;driverRating&quot;;
+	public static final String WAIT_TIME = &quot;waitTime&quot;;
+	public static final String CUSTOMER = &quot;customer&quot;;
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
